@@ -1,31 +1,45 @@
-//id selector
-const content=document.querySelector("#content")
+const content = document.querySelector("#content");
+const submit = document.querySelector("#submit"); //POST
 
-//loading page
-windows.addEventListener("load", () => {
-    getUsers();
-})
+submit.addEventListener("click", () => {
+  let fname = document.querySelector("#fname").value;
+  let lname = document.querySelector("#lname").value;
+  let email = document.querySelector("#email").value;
+  let gender = document.querySelector("#gender").value;
+
+
+  let formData = { fname, lname, email, gender };
+  fetch("http://localhost:3610/api/members", {
+    method: "POST",
+    body: JSON.stringify(formData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).catch((error) => console.log(error)); //====== add this ======
+  alert("Successfully inserted!");
+  location.reload(); //======================
+});
+
+
+window.addEventListener("load", () => {
+  getUsers();
+});
+
 
 function getUsers() {
-    let html = ""
-
-    fetch("https://bscs3a-api-crud-jqqr.onrender.com/api/members", {mode: "cors"})
-    // fetch("http://localhost:3610/api/members", {mode: "cors"})
-    .then(response => {
-        console.log(response)
-        return response.json()
+  let html = ""; //https://apicrudpm-nc9c.onrender.com/api/members
+  fetch("http://localhost:3610/api/members", { mode: "cors" })
+    .then((response) => {
+      return response.json();
     })
-
     .then((data) => {
-        console.log(data)
-        data.forEach((element) => {
-            html += `<li>${element.first_name} ${element.last_name}</li>`
-        })
-
-        content.innerHTML = html
+      console.log(data); //display DOM
+      data.forEach((element) => {
+        html += `<li>${element.first_name} ${element.last_name}</li>`;
+      });
+      content.innerHTML = html;
     })
     .catch((error) => {
-        copnsole.log(error)
-    })
-
+      console.log(error);
+    });
 }
